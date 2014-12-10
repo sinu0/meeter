@@ -1,0 +1,27 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+
+GET         /                        controllers.Application.dashboard
+GET         /logout                  controllers.Application.logout
+GET         /login                   controllers.Application.login
+GET         /register                controllers.Application.register
+GET         /room/:token             controllers.Application.room(token:String)
+GET         /json/all                controllers.Application.jsonFindAll
+GET         /json/getbyid/:id        controllers.Application.jsonGet(id:Long)
+GET         /edit/:token             controllers.Application.editRoom(token:String)
+GET         /createRoom              controllers.Application.createRoomPage
+GET    /help controllers.Application.help
+
+# Home page
+POST        /insert                  controllers.Application.insert
+POST        /json/                   controllers.Application.jsonCreateRoom
+POST        /createRoom              controllers.Application.createRoom
+POST        /auth                    controllers.Application.auth
+POST        /registerUser            controllers.Application.registerUser
+
+#PUT         /json/:id               controllers.Application.
+# Map static resources from the /public folder to the /assets URL path
+GET         /assets/*file            controllers.Assets.at(path="/public", file)

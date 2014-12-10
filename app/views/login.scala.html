@@ -1,0 +1,61 @@
+@(form: Form[Login])
+@mainLogin("Cat database") {
+
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-md-6 column">
+                <div class="jumbotron">
+                    <h2>
+                        Hello in Meeter
+                    </h2>
+                    <h3>
+                        Meeter is very handy app where you can create new meeting among your freinds.
+                    </h3><h3><b> To use all functionality of website you should:</b></h3>
+                    <p>
+                        <a class="btn btn-primary btn-large" href="/register">Register now!</a>
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6 column">
+                <h3 class="text-left text-muted">
+                    Sing in.
+                </h3>
+
+                <div class='form-group'>
+                @if(form.hasGlobalErrors) {
+
+                    @for(error <- form.globalErrors) {
+                        <div class="alert alert-danger" role="alert">
+                            <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                            <span class="sr-only">Error:</span>
+                            @error.message
+                        </div>
+
+                    }
+
+                }
+                </div>
+                <form class="form-horizontal" role="form" action="/auth" method="POST">
+                    <div class="form-group">
+                        <label for="email" class="col-sm-2 control-label">Email</label>
+                        <div class="col-sm-10">
+                            <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="@form("email").value" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="pass" class="col-sm-2 control-label">Password</label>
+                        <div class="col-sm-10">
+                            <input type="password" class="form-control" id="pass" name="pass" placeholder="Password" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10">
+                            <button type="submit" class="btn btn-default">Login</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+}

@@ -1,0 +1,71 @@
+@(form: Form[Message])
+    @mainLogin("Cat database") {
+        <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"></link>
+        <div class="container">
+            <div class="row clearfix">
+                <div class="col-md-6 column">
+                    <legend>Get in touch.</legend>
+                    <h3><small>We're approachable and would love to speak to you. <br>
+                        Feel free to call, send us an email, Tweet us or simply complete the enquiry form.</small></h3>
+                    <br>
+
+                    <div class="list-group col-lg-11">
+                        <ul>
+                            <li class="list-group-item"><span class="glyphicon glyphicon-earphone"> <small><small><small>+</small></small>48 606734619</small></span></li>
+                            <li class="list-group-item"><span class="glyphicon glyphicon-envelope"> <addres><a href="mailto:pacek@@student.agh.edu.pl" ><small>pacek@@student.agh.edu.pl</small></a></addres></span></li>
+                        </ul>
+
+
+
+
+                    </div>
+
+                </div>
+                <div class="col-md-6 column">
+                    <legend>Send us a message.</legend>
+
+
+                    <div class='form-group'>
+                    @if(form.hasGlobalErrors) {
+
+                        @for(error <- form.globalErrors) {
+                            <div class="alert alert-danger" role="alert">
+                                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                                <span class="sr-only">Error:</span>
+                                @error.message
+                            </div>
+
+                        }
+
+                    }
+                    </div>
+
+                    <form class="form-horizontal" role="form" action="/sendMail" method="POST">
+                        <div class="form-group">
+                            <label for="email" class="col-sm-2 control-label">Name</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="name" name="name" placeholder="Name" value="@form("name").value" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="col-sm-2 control-label">Email</label>
+                            <div class="col-sm-10">
+                                <input type="email" class="form-control" id="email" name="email" placeholder="Email" value="@form("email").value" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="pass" class="col-sm-2 control-label">Message</label>
+                            <div class="col-sm-10">
+                                <textarea class="form-control" id="message" name="message" ></textarea>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-default">Login</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }

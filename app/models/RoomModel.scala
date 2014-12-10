@@ -22,7 +22,7 @@ case class RoomData(survey: SurveyRoom, user: UserData)
 
 case class Message(email: String, message: String)
 
-/* Table mapping
+/* Table mapping test
  */
 class UserDataTable(tag: Tag) extends Table[UserData](tag, "USER") {
 

@@ -250,7 +250,11 @@ object Application extends Controller with Secured {
 
     Redirect(routes.Application.dashboard)
   }
+  def deleteRoom(id:String) = withUser { us => implicit request =>
+    roomT.find
+    Ok("")
 
+  }
   def jsonFindAll = DBAction { implicit rs =>
 
     Ok(toJson(user.list))

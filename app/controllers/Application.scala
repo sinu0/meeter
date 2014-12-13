@@ -1,6 +1,5 @@
 package controllers
 
-import com.sun.corba.se.impl.presentation.rmi.PresentationManagerImpl
 import models._
 import org.apache.commons.codec.DecoderException
 import org.h2.jdbc.JdbcSQLException
@@ -12,7 +11,7 @@ import play.api.data.Forms._
 import play.api.mvc._
 import play.api.Play.current
 
-import play.api.libs.json.{JsObject, Json}
+import play.api.libs.json.Json
 import play.api.libs.json.Json._
 import play.api.libs._
 
@@ -33,7 +32,8 @@ object Application extends Controller with Secured {
   def dashboard = withUser { us => implicit request =>
     val prem = new models.Permission().values.toList.map(_.toString)
 
-    val userRooms:List[RoomT] = roomT.filter(_.creatorId === us.userId).list
+    val userRooms: List[RoomT] = roomT.filter(_.creatorId === us.userId).list
+
     Ok(views.html.index(us, prem, userRooms))
   }
 
@@ -41,14 +41,17 @@ object Application extends Controller with Secured {
   val createRoomForm = Form(
     mapping(
       "name" -> text,
+      "message" -> text,
       "perm" -> text,
       "labelType" -> text,
       "dateFrom" -> sqlDate,
       "dateTo" -> sqlDate,
       "maxValue" -> number(0, 10),
-      "labels" -> text
+      "labels" -> text,
+      "users" ->list(text),
+      "endDay" -> sqlDate("yyyy-MM-dd'T'hh:mm")
     )(CreateRoom.apply)(CreateRoom.unapply) verifying("Invalid form", form => form match {
-      case form => Logger.logger.debug(form.toString);!form.roomName.isEmpty || !form.perm.isEmpty || !form.labelType.isEmpty || form.dateTo.before(form.dateFrom) || form.Labels.split(',').length < 3
+      case form => Logger.logger.debug(form.toString); !form.roomName.isEmpty || !form.perm.isEmpty || !form.labelType.isEmpty || form.dateTo.before(form.dateFrom) || form.Labels.split(',').length < 3
     })
   )
 
@@ -161,10 +164,10 @@ object Application extends Controller with Secured {
   def createRoom = withUser { us =>
     implicit request =>
       createRoomForm.bindFromRequest().fold(
-        error => Ok(views.html.createRoom(us, (new Permission).values.toList.map(f => f.toString), error.withGlobalError("Invalid form " + error.errors.toString ))),
+        error => Ok(views.html.createRoom(us, (new Permission).values.toList.map(f => f.toString), error.withGlobalError("Invalid form " + error.errors.toString))),
         room => {
           try {
-            val roomId = (roomT returning roomT.map(_.id)) += RoomT(0, room.roomName, us.userId, room.perm, room.labelType, room.dateFrom, room.dateTo, room.maxValue, room.Labels)
+            val roomId = (roomT returning roomT.map(_.id)) += RoomT(0, room.roomName,room.message, us.userId, room.perm, room.labelType, room.dateFrom, room.dateTo, room.maxValue, room.Labels, room.endDay)
             survey.insert(SurveyRoom(0, roomId, us.userId, "0"))
             Redirect(routes.Application.room(Crypto.encryptAES(roomId.toString)))
           } catch {
@@ -188,19 +191,19 @@ object Application extends Controller with Secured {
         val p = new Permission()
 
         r.headOption match {
-          case Some(RoomT(_, name, _, perm, _, _, _, _, _)) => p.withName(perm) match {
+          case Some(RoomT(_, name,_, _, perm, _, _, _, _, _, endTime)) => p.withName(perm) match {
             case p.NONPUBLIC =>
               getUserIdFromRequest(request) match {
                 case Some(u) =>
                   if (s.filter(_._2.id === u.userId).list().size > 0)
-                    Ok(views.html.room(userData, perm))
+                    Ok(views.html.room(userData, perm,endTime))
                   else
                     Unauthorized(views.html.unauthorized())
                 case _ =>
                   Unauthorized(views.html.unauthorized())
               }
             case p.PUBLIC =>
-              Ok(views.html.room(userData, perm))
+              Ok(views.html.room(userData, perm,endTime))
             case p.WNONPUBLIC =>
               Ok("")
             case p.WPUBLIC =>
@@ -250,11 +253,25 @@ object Application extends Controller with Secured {
 
     Redirect(routes.Application.dashboard)
   }
-  def deleteRoom(id:String) = withUser { us => implicit request =>
-    roomT.find
-    Ok("")
 
+  def deleteRoom(id: String) = withJsonUser { us => implicit request =>
+
+    try {
+      val i = Crypto.decryptAES(id).toLong
+      roomT.filter(f => (f.creatorId === us.userId && f.id === i)).list.size match {
+        case 1 =>
+          roomT.filter(f => f.id === i).delete match {
+            case 1 => Ok(Json.obj("status" -> "OK", "code" -> "200"))
+            case 0 => BadRequest(Json.obj("status" -> "400", "message" -> "Room deletion failed"))
+            case e => BadRequest(Json.obj("status" -> "400", "message" -> "Unexcepted error "))
+          }
+        case _ => Unauthorized(Json.obj("status" -> "401", "message" -> "Unexcepted error "))
+      }
+    } catch {
+      case e: Throwable => BadRequest(Json.obj("status" -> "400", "message" -> e.getCause.toString))
+    }
   }
+
   def jsonFindAll = DBAction { implicit rs =>
 
     Ok(toJson(user.list))

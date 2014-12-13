@@ -1,31 +1,46 @@
 @(user: UserData, permission: List[String], rooms: List[RoomT])()
+@import play.api.libs._
+@main("Cat database", user.name) {
 
-    @main("Cat database", user.name) {
 
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-md-6 column">
+                <legend>You are owner of:</legend>
+                <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                @for(r <- rooms) {
+                    <div class="panel panel-default" id="room@Crypto.encryptAES(r.roomId.toString)">
+                        <div class="panel-heading" role="tab" id="headingOne">
+                            <h4 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#accordion" href="#collapse@Crypto.encryptAES(r.roomId.toString)" aria-expanded="true" aria-controls="collapse@Crypto.encryptAES(r.roomId.toString)">
+                                    <label class="control-label col-sm-2">Room:</label> @r.roomName
+                                </a>
+                                <a data-toggle="modal" href="#modal-container-183525" class="badge" style="float : right" onclick="modifyModal ( '  @Crypto.encryptAES(r.roomId.toString) ')" >Edit</a>
+                            </h4>
+                        </div>
+                        <div id="collapse@Crypto.encryptAES(r.roomId.toString)" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading@Crypto.encryptAES(r.roomId.toString)">
+                            <div class="panel-body">
+                                <label class="control-label" for="message">Description:</label>
 
-        <div class="container">
-            <div class="row clearfix">
-                <div class="col-md-6 column">
-                    <legend>You are owner of:</legend>
-                    <ul class="list-group">
-                    @for(r <- rooms) {
+                                    @r.message
+                                <a style="float : right" href="/room/@Crypto.encryptAES(r.roomId.toString)">View more of @r.roomName</a>
+                            </div>
+                        </div>
+                    </div>
 
-                        <li id="room@r.roomId" class="list-group-item">
-                            <label class="control-label col-sm-2" for="room">Room:</label>
-                            <a data-toggle="modal" href="#modal-container-183525" class="badge" onclick="modifyModal(@r.roomId)" >Edit</a> @r.roomName</li>
-                    }
-                    </ul>
-                </div>
-                <div class="col-md-6 column">
-                    <legend>You participate in:</legend>
-                    <ul class="list-group">
-                    @for(r <- rooms) {
-                        <li class="list-group-item"><span class="badge">14</span> @r.roomName</li>
-                    }
-                    </ul>
+                }
                 </div>
             </div>
+            <div class="col-md-6 column">
+                <legend>You participate in:</legend>
+                <ul class="list-group">
+                @for(r <- rooms) {
+                    <li id="roomP@Crypto.encryptAES(r.roomId.toString)" class="list-group-item"><span class="badge">14</span> @r.roomName</li>
+                }
+                </ul>
+            </div>
         </div>
+
 
         <div class="modal fade" id="modal-container-183525" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -36,15 +51,23 @@
                             Modal title
                         </h4>
                     </div>
+                    <div id="errorDiv" class="alert alert-danger" role="alert">
+                        <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                        <span class="sr-only">Error:</span>
+                        <span id="errorMessage"></span>
+                    </div>
                     <div class="modal-body">
                         <div class="btn-group">
-                            <button id="stop" type="button" class="btn btn-default" onclick="alert ( 'Usuwam ankiete' )">Stop</button>
+                            <button id="stop" type="button" class="btn btn-default" onclick="alert ( 'Usuwam ankiete' )">
+                                Stop</button>
                         </div>
                         <div class="btn-group">
-                            <button id="edit" type="button" class="btn btn-info" onclick="alert ( 'Usuwam ankiete' )">Edit</button>
+                            <button id="edit" type="button" class="btn btn-info" onclick="alert ( 'Usuwam ankiete' )">
+                                Edit</button>
                         </div>
                         <div class="btn-group">
-                            <button id="delete" type="button" class="btn btn-danger" onclick="alert ( 'Usuwam ankiete' )">Delete</button>
+                            <button id="delete" type="button" class="btn btn-danger" onclick="alert ( 'Usuwam ankiete' )">
+                                Delete</button>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -56,27 +79,59 @@
             </div>
 
         </div>
+
+    </div>
+
+
     <script>
-        function modifyModal(id){
-            $("#stop" ).attr("onclick","stop("+id+")");
-            $("#delete" ).attr("onclick","deleteSurvey("+id+")");
-            $("#edit" ).attr("onclick","edit("+id+")");
 
-        }
-
-        function deleteSurvey(id){
-
-            $('#closeBtn' ).click();
-            $('#room'+id ).animate({
-                width: '0px'
-            }, {
-                duration: 1000,
-                complete: function() {
-                    $(this).remove();
-                }
-            });
-
-        }
-    </script>
+    function modifyModal ( id ) { ;
+    $ ( "#stop" ).attr ( "onclick", "stop('" + id + "')" ) ;
+    $ ( "#delete" ).attr ( "onclick", "deleteSurvey('" + id + "')" ) ;
+    $ ( "#edit" ).attr ( "onclick", "edit('" + id + "')" ) ;
+    $ ( "#errorDiV" ).hide ( ) ;
 
     }
+
+    function deleteSurvey ( id ) {
+    $.ajax ( {
+    url : '/deleteRoom/' + id,
+    type : 'DELETE',
+    success : function ( ) {
+    $ ( '#closeBtn' ).click ( ) ;
+    $ ( '#room' + id ).animate ( {
+    height : '0px'
+    }, {
+    duration : 1000,
+    complete : function ( ) {
+    $ ( this ).remove ( ) ;
+    }
+    } ) ;
+    $ ( '#roomP' + id ).animate ( {
+    height : '0px'
+    }, {
+    duration : 1000,
+    complete : function ( ) {
+    $ ( this ).remove ( ) ;
+    }
+    } ) ;
+    },
+    error : function ( result ) {
+    $ ( "#errorMessage" ).text ( result.message )
+    $ ( "#errorDiV" ).show ( 0 ).delay ( 1000 * 5 ).animate ( {
+    height : '0px'
+    }, {
+    duration : 1000,
+    complete : function ( ) {
+    $ ( this ).hide ( 0 ) ;
+    }
+    } ) ;
+    }
+
+    } ) ;
+
+
+    }
+    </script>
+
+}

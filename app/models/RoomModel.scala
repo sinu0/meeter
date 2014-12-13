@@ -4,11 +4,13 @@ import java.sql.Date
 
 import play.api.db.slick.Config.driver.simple._
 
+import scala.slick.model.ForeignKeyAction
+
 case class UserData(userId: Long, name: String, password: String)
 
-case class RoomT(roomId: Long, roomName: String, creatorId: Long, perm: String, labelType: String, dateFrom: Date, dateTo: Date, maxValue: Int, Labels: String)
+case class RoomT(roomId: Long, roomName: String, message: String, creatorId: Long, perm: String, labelType: String, dateFrom: Date, dateTo: Date, maxValue: Int, Labels: String,endDate: Date)
 
-case class CreateRoom(roomName: String, perm: String, labelType: String, dateFrom: Date, dateTo: Date,maxValue:Int, Labels:String)
+case class CreateRoom(roomName: String, message: String, perm: String, labelType: String, dateFrom: Date, dateTo: Date, maxValue: Int, Labels: String, usersEmails: List[String], endDay: Date)
 
 case class Login(login: String, password: String)
 
@@ -52,14 +54,16 @@ class SurveyTable(tag: Tag) extends Table[SurveyRoom](tag, "SURVEY") {
 
   def * = (id, roomId, userId, data) <>(SurveyRoom.tupled, SurveyRoom.unapply _)
 
-  def roomFk = foreignKey("roomFk", roomId, roomTable)(_.id)
+  def roomFk = foreignKey("roomFk", roomId, roomTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 
-  def userFk = foreignKey("userFk", userId, userTable)(_.id)
+  def userFk = foreignKey("userFk", userId, userTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 }
 
 class RoomTable(tag: Tag) extends Table[RoomT](tag, "ROOM") {
 
   def id = column[Long]("id", O.PrimaryKey, O.AutoInc)
+
+  def message = column[String]("message")
 
   def roomName = column[String]("roomName", O.NotNull)
 
@@ -78,7 +82,9 @@ class RoomTable(tag: Tag) extends Table[RoomT](tag, "ROOM") {
 
   def maxValue = column[Int]("maxValue", O.NotNull)
 
-  def * = (id, roomName, creatorId, perm, labelType, dateFrom, dateTo, maxValue, labels) <>(RoomT.tupled, RoomT.unapply _)
+  def endDate = column[Date]("endDate", O.NotNull)
+
+  def * = (id, message, roomName, creatorId, perm, labelType, dateFrom, dateTo, maxValue, labels, endDate) <>(RoomT.tupled, RoomT.unapply _)
 
 }
 

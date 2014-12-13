@@ -1,6 +1,6 @@
 // @SOURCE:/home/mar/play-slick-quickstart/conf/routes
-// @HASH:d30413139c2959418884c8b5cb46a5d275486f7b
-// @DATE:Wed Dec 03 16:37:13 CET 2014
+// @HASH:045a292f83a003f8ef5e68b1adc82f13e77c15cf
+// @DATE:Sat Dec 13 01:31:15 CET 2014
 
 import Routes.{prefix => _prefix, defaultPrefix => _defaultPrefix}
 import play.core._
@@ -14,12 +14,13 @@ import _root_.controllers.Assets.Asset
 import Router.queryString
 
 
-// @LINE:27
+// @LINE:28
+// @LINE:24
 // @LINE:23
 // @LINE:22
 // @LINE:21
 // @LINE:20
-// @LINE:19
+// @LINE:17
 // @LINE:16
 // @LINE:15
 // @LINE:14
@@ -32,11 +33,11 @@ import Router.queryString
 // @LINE:7
 package controllers {
 
-// @LINE:27
+// @LINE:28
 class ReverseAssets {
     
 
-// @LINE:27
+// @LINE:28
 def at(file:String): Call = {
    implicit val _rrc = new ReverseRouteContext(Map(("path", "/public")))
    Call("GET", _prefix + { _defaultPrefix } + "assets/" + implicitly[PathBindable[String]].unbind("file", file))
@@ -46,11 +47,12 @@ def at(file:String): Call = {
 }
                           
 
+// @LINE:24
 // @LINE:23
 // @LINE:22
 // @LINE:21
 // @LINE:20
-// @LINE:19
+// @LINE:17
 // @LINE:16
 // @LINE:15
 // @LINE:14
@@ -71,7 +73,7 @@ def help(): Call = {
 }
                         
 
-// @LINE:22
+// @LINE:23
 def auth(): Call = {
    import ReverseRouteContext.empty
    Call("POST", _prefix + { _defaultPrefix } + "auth")
@@ -85,7 +87,7 @@ def jsonGet(id:Long): Call = {
 }
                         
 
-// @LINE:21
+// @LINE:22
 def createRoom(): Call = {
    import ReverseRouteContext.empty
    Call("POST", _prefix + { _defaultPrefix } + "createRoom")
@@ -106,14 +108,21 @@ def room(token:String): Call = {
 }
                         
 
-// @LINE:23
+// @LINE:24
 def registerUser(): Call = {
    import ReverseRouteContext.empty
    Call("POST", _prefix + { _defaultPrefix } + "registerUser")
 }
                         
 
-// @LINE:19
+// @LINE:17
+def deleteRoom(id:String): Call = {
+   import ReverseRouteContext.empty
+   Call("DELETE", _prefix + { _defaultPrefix } + "deleteRoom/" + implicitly[PathBindable[String]].unbind("id", dynamicString(id)))
+}
+                        
+
+// @LINE:20
 def insert(): Call = {
    import ReverseRouteContext.empty
    Call("POST", _prefix + { _defaultPrefix } + "insert")
@@ -155,7 +164,7 @@ def register(): Call = {
 }
                         
 
-// @LINE:20
+// @LINE:21
 def jsonCreateRoom(): Call = {
    import ReverseRouteContext.empty
    Call("POST", _prefix + { _defaultPrefix } + "json/")
@@ -175,12 +184,13 @@ def login(): Call = {
                   
 
 
-// @LINE:27
+// @LINE:28
+// @LINE:24
 // @LINE:23
 // @LINE:22
 // @LINE:21
 // @LINE:20
-// @LINE:19
+// @LINE:17
 // @LINE:16
 // @LINE:15
 // @LINE:14
@@ -194,11 +204,11 @@ def login(): Call = {
 package controllers.javascript {
 import ReverseRouteContext.empty
 
-// @LINE:27
+// @LINE:28
 class ReverseAssets {
     
 
-// @LINE:27
+// @LINE:28
 def at : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Assets.at",
    """
@@ -212,11 +222,12 @@ def at : JavascriptReverseRoute = JavascriptReverseRoute(
 }
               
 
+// @LINE:24
 // @LINE:23
 // @LINE:22
 // @LINE:21
 // @LINE:20
-// @LINE:19
+// @LINE:17
 // @LINE:16
 // @LINE:15
 // @LINE:14
@@ -241,7 +252,7 @@ def help : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:22
+// @LINE:23
 def auth : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.auth",
    """
@@ -263,7 +274,7 @@ def jsonGet : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:21
+// @LINE:22
 def createRoom : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.createRoom",
    """
@@ -296,7 +307,7 @@ def room : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:23
+// @LINE:24
 def registerUser : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.registerUser",
    """
@@ -307,7 +318,18 @@ def registerUser : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:19
+// @LINE:17
+def deleteRoom : JavascriptReverseRoute = JavascriptReverseRoute(
+   "controllers.Application.deleteRoom",
+   """
+      function(id) {
+      return _wA({method:"DELETE", url:"""" + _prefix + { _defaultPrefix } + """" + "deleteRoom/" + (""" + implicitly[PathBindable[String]].javascriptUnbind + """)("id", encodeURIComponent(id))})
+      }
+   """
+)
+                        
+
+// @LINE:20
 def insert : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.insert",
    """
@@ -373,7 +395,7 @@ def register : JavascriptReverseRoute = JavascriptReverseRoute(
 )
                         
 
-// @LINE:20
+// @LINE:21
 def jsonCreateRoom : JavascriptReverseRoute = JavascriptReverseRoute(
    "controllers.Application.jsonCreateRoom",
    """
@@ -401,12 +423,13 @@ def login : JavascriptReverseRoute = JavascriptReverseRoute(
         
 
 
-// @LINE:27
+// @LINE:28
+// @LINE:24
 // @LINE:23
 // @LINE:22
 // @LINE:21
 // @LINE:20
-// @LINE:19
+// @LINE:17
 // @LINE:16
 // @LINE:15
 // @LINE:14
@@ -420,11 +443,11 @@ def login : JavascriptReverseRoute = JavascriptReverseRoute(
 package controllers.ref {
 
 
-// @LINE:27
+// @LINE:28
 class ReverseAssets {
     
 
-// @LINE:27
+// @LINE:28
 def at(path:String, file:String): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Assets.at(path, file), HandlerDef(this.getClass.getClassLoader, "", "controllers.Assets", "at", Seq(classOf[String], classOf[String]), "GET", """PUT         /json/:id               controllers.Application.
  Map static resources from the /public folder to the /assets URL path""", _prefix + """assets/$file<.+>""")
@@ -434,11 +457,12 @@ def at(path:String, file:String): play.api.mvc.HandlerRef[_] = new play.api.mvc.
 }
                           
 
+// @LINE:24
 // @LINE:23
 // @LINE:22
 // @LINE:21
 // @LINE:20
-// @LINE:19
+// @LINE:17
 // @LINE:16
 // @LINE:15
 // @LINE:14
@@ -458,7 +482,7 @@ def help(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
 )
                       
 
-// @LINE:22
+// @LINE:23
 def auth(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.auth(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "auth", Seq(), "POST", """""", _prefix + """auth""")
 )
@@ -470,7 +494,7 @@ def jsonGet(id:Long): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
 )
                       
 
-// @LINE:21
+// @LINE:22
 def createRoom(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.createRoom(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "createRoom", Seq(), "POST", """""", _prefix + """createRoom""")
 )
@@ -488,13 +512,19 @@ def room(token:String): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef
 )
                       
 
-// @LINE:23
+// @LINE:24
 def registerUser(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.registerUser(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "registerUser", Seq(), "POST", """""", _prefix + """registerUser""")
 )
                       
 
-// @LINE:19
+// @LINE:17
+def deleteRoom(id:String): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
+   controllers.Application.deleteRoom(id), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "deleteRoom", Seq(classOf[String]), "DELETE", """""", _prefix + """deleteRoom/$id<[^/]+>""")
+)
+                      
+
+// @LINE:20
 def insert(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.insert(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "insert", Seq(), "POST", """ Home page""", _prefix + """insert""")
 )
@@ -530,7 +560,7 @@ def register(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
 )
                       
 
-// @LINE:20
+// @LINE:21
 def jsonCreateRoom(): play.api.mvc.HandlerRef[_] = new play.api.mvc.HandlerRef(
    controllers.Application.jsonCreateRoom(), HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "jsonCreateRoom", Seq(), "POST", """""", _prefix + """json/""")
 )

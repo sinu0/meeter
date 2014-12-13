@@ -1,6 +1,6 @@
 // @SOURCE:/home/mar/play-slick-quickstart/conf/routes
-// @HASH:d30413139c2959418884c8b5cb46a5d275486f7b
-// @DATE:Wed Dec 03 16:37:13 CET 2014
+// @HASH:045a292f83a003f8ef5e68b1adc82f13e77c15cf
+// @DATE:Sat Dec 13 01:31:15 CET 2014
 
 package controllers;
 

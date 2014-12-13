@@ -1,6 +1,6 @@
 // @SOURCE:/home/mar/play-slick-quickstart/conf/routes
-// @HASH:d30413139c2959418884c8b5cb46a5d275486f7b
-// @DATE:Wed Dec 03 16:37:13 CET 2014
+// @HASH:045a292f83a003f8ef5e68b1adc82f13e77c15cf
+// @DATE:Sat Dec 13 01:31:15 CET 2014
 
 
 import play.core._
@@ -101,49 +101,56 @@ controllers.Application.help,
 HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "help", Nil,"GET", """""", Routes.prefix + """help"""))
         
 
-// @LINE:19
-private[this] lazy val controllers_Application_insert10_route = Route("POST", PathPattern(List(StaticPart(Routes.prefix),StaticPart(Routes.defaultPrefix),StaticPart("insert"))))
-private[this] lazy val controllers_Application_insert10_invoker = createInvoker(
+// @LINE:17
+private[this] lazy val controllers_Application_deleteRoom10_route = Route("DELETE", PathPattern(List(StaticPart(Routes.prefix),StaticPart(Routes.defaultPrefix),StaticPart("deleteRoom/"),DynamicPart("id", """[^/]+""",true))))
+private[this] lazy val controllers_Application_deleteRoom10_invoker = createInvoker(
+controllers.Application.deleteRoom(fakeValue[String]),
+HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "deleteRoom", Seq(classOf[String]),"DELETE", """""", Routes.prefix + """deleteRoom/$id<[^/]+>"""))
+        
+
+// @LINE:20
+private[this] lazy val controllers_Application_insert11_route = Route("POST", PathPattern(List(StaticPart(Routes.prefix),StaticPart(Routes.defaultPrefix),StaticPart("insert"))))
+private[this] lazy val controllers_Application_insert11_invoker = createInvoker(
 controllers.Application.insert,
 HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "insert", Nil,"POST", """ Home page""", Routes.prefix + """insert"""))
         
 
-// @LINE:20
-private[this] lazy val controllers_Application_jsonCreateRoom11_route = Route("POST", PathPattern(List(StaticPart(Routes.prefix),StaticPart(Routes.defaultPrefix),StaticPart("json/"))))
-private[this] lazy val controllers_Application_jsonCreateRoom11_invoker = createInvoker(
+// @LINE:21
+private[this] lazy val controllers_Application_jsonCreateRoom12_route = Route("POST", PathPattern(List(StaticPart(Routes.prefix),StaticPart(Routes.defaultPrefix),StaticPart("json/"))))
+private[this] lazy val controllers_Application_jsonCreateRoom12_invoker = createInvoker(
 controllers.Application.jsonCreateRoom,
 HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "jsonCreateRoom", Nil,"POST", """""", Routes.prefix + """json/"""))
         
 
-// @LINE:21
-private[this] lazy val controllers_Application_createRoom12_route = Route("POST", PathPattern(List(StaticPart(Routes.prefix),StaticPart(Routes.defaultPrefix),StaticPart("createRoom"))))
-private[this] lazy val controllers_Application_createRoom12_invoker = createInvoker(
+// @LINE:22
+private[this] lazy val controllers_Application_createRoom13_route = Route("POST", PathPattern(List(StaticPart(Routes.prefix),StaticPart(Routes.defaultPrefix),StaticPart("createRoom"))))
+private[this] lazy val controllers_Application_createRoom13_invoker = createInvoker(
 controllers.Application.createRoom,
 HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "createRoom", Nil,"POST", """""", Routes.prefix + """createRoom"""))
         
 
-// @LINE:22
-private[this] lazy val controllers_Application_auth13_route = Route("POST", PathPattern(List(StaticPart(Routes.prefix),StaticPart(Routes.defaultPrefix),StaticPart("auth"))))
-private[this] lazy val controllers_Application_auth13_invoker = createInvoker(
+// @LINE:23
+private[this] lazy val controllers_Application_auth14_route = Route("POST", PathPattern(List(StaticPart(Routes.prefix),StaticPart(Routes.defaultPrefix),StaticPart("auth"))))
+private[this] lazy val controllers_Application_auth14_invoker = createInvoker(
 controllers.Application.auth,
 HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "auth", Nil,"POST", """""", Routes.prefix + """auth"""))
         
 
-// @LINE:23
-private[this] lazy val controllers_Application_registerUser14_route = Route("POST", PathPattern(List(StaticPart(Routes.prefix),StaticPart(Routes.defaultPrefix),StaticPart("registerUser"))))
-private[this] lazy val controllers_Application_registerUser14_invoker = createInvoker(
+// @LINE:24
+private[this] lazy val controllers_Application_registerUser15_route = Route("POST", PathPattern(List(StaticPart(Routes.prefix),StaticPart(Routes.defaultPrefix),StaticPart("registerUser"))))
+private[this] lazy val controllers_Application_registerUser15_invoker = createInvoker(
 controllers.Application.registerUser,
 HandlerDef(this.getClass.getClassLoader, "", "controllers.Application", "registerUser", Nil,"POST", """""", Routes.prefix + """registerUser"""))
         
 
-// @LINE:27
-private[this] lazy val controllers_Assets_at15_route = Route("GET", PathPattern(List(StaticPart(Routes.prefix),StaticPart(Routes.defaultPrefix),StaticPart("assets/"),DynamicPart("file", """.+""",false))))
-private[this] lazy val controllers_Assets_at15_invoker = createInvoker(
+// @LINE:28
+private[this] lazy val controllers_Assets_at16_route = Route("GET", PathPattern(List(StaticPart(Routes.prefix),StaticPart(Routes.defaultPrefix),StaticPart("assets/"),DynamicPart("file", """.+""",false))))
+private[this] lazy val controllers_Assets_at16_invoker = createInvoker(
 controllers.Assets.at(fakeValue[String], fakeValue[String]),
 HandlerDef(this.getClass.getClassLoader, "", "controllers.Assets", "at", Seq(classOf[String], classOf[String]),"GET", """PUT         /json/:id               controllers.Application.
  Map static resources from the /public folder to the /assets URL path""", Routes.prefix + """assets/$file<.+>"""))
         
-def documentation = List(("""GET""", prefix,"""controllers.Application.dashboard"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """logout""","""controllers.Application.logout"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """login""","""controllers.Application.login"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """register""","""controllers.Application.register"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """room/$token<[^/]+>""","""controllers.Application.room(token:String)"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """json/all""","""controllers.Application.jsonFindAll"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """json/getbyid/$id<[^/]+>""","""controllers.Application.jsonGet(id:Long)"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """edit/$token<[^/]+>""","""controllers.Application.editRoom(token:String)"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """createRoom""","""controllers.Application.createRoomPage"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """help""","""controllers.Application.help"""),("""POST""", prefix + (if(prefix.endsWith("/")) "" else "/") + """insert""","""controllers.Application.insert"""),("""POST""", prefix + (if(prefix.endsWith("/")) "" else "/") + """json/""","""controllers.Application.jsonCreateRoom"""),("""POST""", prefix + (if(prefix.endsWith("/")) "" else "/") + """createRoom""","""controllers.Application.createRoom"""),("""POST""", prefix + (if(prefix.endsWith("/")) "" else "/") + """auth""","""controllers.Application.auth"""),("""POST""", prefix + (if(prefix.endsWith("/")) "" else "/") + """registerUser""","""controllers.Application.registerUser"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """assets/$file<.+>""","""controllers.Assets.at(path:String = "/public", file:String)""")).foldLeft(List.empty[(String,String,String)]) { (s,e) => e.asInstanceOf[Any] match {
+def documentation = List(("""GET""", prefix,"""controllers.Application.dashboard"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """logout""","""controllers.Application.logout"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """login""","""controllers.Application.login"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """register""","""controllers.Application.register"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """room/$token<[^/]+>""","""controllers.Application.room(token:String)"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """json/all""","""controllers.Application.jsonFindAll"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """json/getbyid/$id<[^/]+>""","""controllers.Application.jsonGet(id:Long)"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """edit/$token<[^/]+>""","""controllers.Application.editRoom(token:String)"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """createRoom""","""controllers.Application.createRoomPage"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """help""","""controllers.Application.help"""),("""DELETE""", prefix + (if(prefix.endsWith("/")) "" else "/") + """deleteRoom/$id<[^/]+>""","""controllers.Application.deleteRoom(id:String)"""),("""POST""", prefix + (if(prefix.endsWith("/")) "" else "/") + """insert""","""controllers.Application.insert"""),("""POST""", prefix + (if(prefix.endsWith("/")) "" else "/") + """json/""","""controllers.Application.jsonCreateRoom"""),("""POST""", prefix + (if(prefix.endsWith("/")) "" else "/") + """createRoom""","""controllers.Application.createRoom"""),("""POST""", prefix + (if(prefix.endsWith("/")) "" else "/") + """auth""","""controllers.Application.auth"""),("""POST""", prefix + (if(prefix.endsWith("/")) "" else "/") + """registerUser""","""controllers.Application.registerUser"""),("""GET""", prefix + (if(prefix.endsWith("/")) "" else "/") + """assets/$file<.+>""","""controllers.Assets.at(path:String = "/public", file:String)""")).foldLeft(List.empty[(String,String,String)]) { (s,e) => e.asInstanceOf[Any] match {
   case r @ (_,_,_) => s :+ r.asInstanceOf[(String,String,String)]
   case l => s ++ l.asInstanceOf[List[(String,String,String)]] 
 }}
@@ -231,50 +238,58 @@ case controllers_Application_help9_route(params) => {
 }
         
 
-// @LINE:19
-case controllers_Application_insert10_route(params) => {
-   call { 
-        controllers_Application_insert10_invoker.call(controllers.Application.insert)
+// @LINE:17
+case controllers_Application_deleteRoom10_route(params) => {
+   call(params.fromPath[String]("id", None)) { (id) =>
+        controllers_Application_deleteRoom10_invoker.call(controllers.Application.deleteRoom(id))
    }
 }
         
 
 // @LINE:20
-case controllers_Application_jsonCreateRoom11_route(params) => {
+case controllers_Application_insert11_route(params) => {
    call { 
-        controllers_Application_jsonCreateRoom11_invoker.call(controllers.Application.jsonCreateRoom)
+        controllers_Application_insert11_invoker.call(controllers.Application.insert)
    }
 }
         
 
 // @LINE:21
-case controllers_Application_createRoom12_route(params) => {
+case controllers_Application_jsonCreateRoom12_route(params) => {
    call { 
-        controllers_Application_createRoom12_invoker.call(controllers.Application.createRoom)
+        controllers_Application_jsonCreateRoom12_invoker.call(controllers.Application.jsonCreateRoom)
    }
 }
         
 
 // @LINE:22
-case controllers_Application_auth13_route(params) => {
+case controllers_Application_createRoom13_route(params) => {
    call { 
-        controllers_Application_auth13_invoker.call(controllers.Application.auth)
+        controllers_Application_createRoom13_invoker.call(controllers.Application.createRoom)
    }
 }
         
 
 // @LINE:23
-case controllers_Application_registerUser14_route(params) => {
+case controllers_Application_auth14_route(params) => {
    call { 
-        controllers_Application_registerUser14_invoker.call(controllers.Application.registerUser)
+        controllers_Application_auth14_invoker.call(controllers.Application.auth)
    }
 }
         
 
-// @LINE:27
-case controllers_Assets_at15_route(params) => {
+// @LINE:24
+case controllers_Application_registerUser15_route(params) => {
+   call { 
+        controllers_Application_registerUser15_invoker.call(controllers.Application.registerUser)
+   }
+}
+        
+
+// @LINE:28
+case controllers_Assets_at16_route(params) => {
    call(Param[String]("path", Right("/public")), params.fromPath[String]("file", None)) { (path, file) =>
-        controllers_Assets_at15_invoker.call(controllers.Assets.at(path, file))
+        controllers_Assets_at16_invoker.call(controllers.Assets.at(path, file))
    }
 }
         

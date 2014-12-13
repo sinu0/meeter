@@ -1,6 +1,0 @@
-[0m[[0mdebug[0m] [0mCopy resource mappings: [0m
-[0m[[0mdebug[0m] [0m	(/home/mar/play-slick-quickstart/conf/routes,/home/mar/play-slick-quickstart/target/scala-2.10/classes/routes)[0m
-[0m[[0mdebug[0m] [0m	(/home/mar/play-slick-quickstart/conf/application.conf,/home/mar/play-slick-quickstart/target/scala-2.10/classes/application.conf)[0m
-[0m[[0mdebug[0m] [0m	(/home/mar/play-slick-quickstart/conf/evolutions,/home/mar/play-slick-quickstart/target/scala-2.10/classes/evolutions)[0m
-[0m[[0mdebug[0m] [0m	(/home/mar/play-slick-quickstart/conf/evolutions/default,/home/mar/play-slick-quickstart/target/scala-2.10/classes/evolutions/default)[0m
-[0m[[0mdebug[0m] [0m	(/home/mar/play-slick-quickstart/conf/evolutions/default/1.sql,/home/mar/play-slick-quickstart/target/scala-2.10/classes/evolutions/default/1.sql)[0m

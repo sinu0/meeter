@@ -1,129 +1,152 @@
 @(user: UserData, permission: List[String], form: Form[CreateRoom])
 
 
-    @main("Create meeting", user.name) {
-        <div class="container">
-            <div class="row clearfix">
-                <div class="col-md-6 column">
-                    <form id="createRoom" class="form-horizontal" action="/createRoom" method="POST" role="form">
+@main("Create meeting", user.name) {
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-6 column">
+            <form id="createRoom" class="form-horizontal" action="/createRoom" method="POST" role="form" onsubmit="readChart()">
 
-                            <!-- Form Name -->
-                        <legend>Create room</legend>
-                        @if(form.hasGlobalErrors) {
+                <!-- Form Name -->
+                <legend>Create room</legend>
+                @if(form.hasGlobalErrors) {
 
-                            @for(error <- form.globalErrors) {
-                                <div class="alert alert-danger" role="alert">
-                                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                                    <span class="sr-only">Error:</span>
-                                    @error.message
-                                </div>
-
-                            }
-
-                        }
-                            <!-- Text input-->
-                        <div class="form-group">
-                            <label class="control-label col-sm-2" for="name">Room name:</label>
-
-                            <div class="col-sm-7">
-                                <input id="name" name="name" type="text" placeholder="name" class="form-control" required="">
-
-                                <p class="help-block">Name of your room</p>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-2" for="name">Short description:</label>
-
-                            <div class="col-sm-7">
-                                <textarea id="message" name="message" type="text" placeholder="Description" class="form-control"></textarea>
-                            </div>
-                        </div>
-                            <!-- Button Drop Down -->
-                        <div class="form-group">
-                            <label class="control-label col-sm-2 " for="perm">Permission:</label>
-
-                            <div class="col-sm-7">
-                                <select id="perm" name="perm" class="form-control" form="createRoom" required="">
-                                @for(perm <- permission) {
-                                    <option value=@perm>@perm</option>
-                                }
-                                </select>
-                            </div>
-                        </div>
-
-                            <!-- Button Drop Down -->
-                        <div class="form-group">
-                            <label class="control-label col-sm-2 " for="labelType">Type:</label>
-
-                            <div class="col-sm-7">
-                                <select id="labelType" name="labelType" class="form-control" form="createRoom" required=""
-                                onclick="modifyDateFormat ( )">
-                                    <option value="year">Year</option>
-                                    <option value="month">Month</option>
-                                    <option value="day">Day</option>
-                                    <option value="hour">Hour</option>
-                                </select>
-                            </div>
-                        </div>
-
-                            <!-- Text input-->
-                        <div class="form-group">
-                            <label class="control-label col-sm-2" for="dateFrom">Date from:</label>
-
-                            <div class="col-sm-7">
-                                <input id="dateFrom" name="dateFrom" type="date" placeholder="14/11/11" class="form-control"
-                                value="">
-
-                                <p class="help-block">Survey start day</p>
-                            </div>
-                        </div>
-
-                            <!-- Text input-->
-                        <div class="form-group">
-                            <label class="control-label col-sm-2 " for="dateTo">Date to:</label>
-
-                            <div class="col-sm-7">
-                                <input id="dateTo" name="dateTo" type="date" placeholder="14/11/12" class="form-control"
-                                required="" onchange="modifyCanvas ( )">
-
-                                <p class="help-block">Survey end date</p>
-                            </div>
-                        </div>
-                            <!-- Text input-->
-                        <div class="form-group">
-                            <label class="control-label col-sm-2 " for="dateTo">Max value</label>
-
-                            <div class="col-sm-7">
-                                <input id="maxValue" name="maxValue" type="number" value="3" class="form-control"
-                                required="" onchange="modifyCanvasNumber ( )" min="3" max="10">
-                                <p class="help-block">Y max value</p>
-                            </div>
-                        </div>
-                        <input id="labels" name="labels" type="hidden" value="">
-                            <!-- Button -->
-                        <div class="form-group">
-                            <div class="col-sm-offset-2 col-sm-10">
-                                <button id="submit" name="submit" class="btn btn-default">Create</button>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label col-sm-2" for="name">Survey end day</label>
-
-                            <div class="col-sm-7">
-                                <input id="endDay" name="endDay" type="datetime-local" class="form-control" required="">
-
-                                <p class="help-block">Time of survey to end</p>
-                            </div>
-                        </div>
-                    </form>
+                @for(error <- form.globalErrors) {
+                <div class="alert alert-danger" role="alert">
+                    <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
+                    <span class="sr-only">Error:</span>
+                    @error.message
                 </div>
+
+                }
+
+                }
+                <!-- Text input-->
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="name">Room name:</label>
+
+                    <div class="col-sm-7">
+                        <input id="name" name="name" type="text" placeholder="name" class="form-control" required="">
+
+                        <p class="help-block">Name of your room</p>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="name">Short description:</label>
+
+                    <div class="col-sm-7">
+                        <textarea id="message" name="message" type="text" placeholder="Description"
+                                  class="form-control"></textarea>
+                    </div>
+                </div>
+                <!-- Button Drop Down -->
+                <div class="form-group">
+                    <label class="control-label col-sm-2 " for="perm">Permission:</label>
+
+                    <div class="col-sm-7">
+                        <select id="perm" name="perm" class="form-control" form="createRoom" required="">
+                            @for(perm <- permission) {
+                            <option value=@perm>@perm</option>
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Button Drop Down -->
+                <div class="form-group">
+                    <label class="control-label col-sm-2 " for="labelType">Type:</label>
+
+                    <div class="col-sm-7">
+                        <select id="labelType" name="labelType" class="form-control" form="createRoom" required=""
+                                onclick="modifyDateFormat ( )">
+                            <option value="year">Year</option>
+                            <option value="month">Month</option>
+                            <option value="day">Day</option>
+                            <option value="hour">Hour</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Text input-->
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="dateFrom">Date from:</label>
+
+                    <div class="col-sm-7">
+                        <input id="dateFrom" name="dateFrom" type="date" placeholder="14/11/11" class="form-control"
+                               value="">
+
+                        <p class="help-block">Survey start day</p>
+                    </div>
+                </div>
+
+                <!-- Text input-->
+                <div class="form-group">
+                    <label class="control-label col-sm-2 " for="dateTo">Date to:</label>
+
+                    <div class="col-sm-7">
+                        <input id="dateTo" name="dateTo" type="date" placeholder="14/11/12" class="form-control"
+                               required="" onchange="modifyCanvas ( )">
+
+                        <p class="help-block">Survey end date</p>
+                    </div>
+                </div>
+                <!-- Text input-->
+                <div class="form-group">
+                    <label class="control-label col-sm-2 " for="dateTo">Max value</label>
+
+                    <div class="col-sm-7">
+                        <input id="maxValue" name="maxValue" type="number" value="3" class="form-control"
+                               required="" onchange="modifyCanvasNumber ( )" min="3" max="10">
+
+                        <p class="help-block">Y max value</p>
+                    </div>
+                </div>
+                <input id="labels" name="labels" type="hidden" value="">
+
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="name">Survey end day</label>
+
+                    <div class="col-sm-7">
+                        <input id="endDay" name="endDay" type="datetime-local" class="form-control" required=""
+                               onChange="checkEndDay()">
+
+                        <p class="help-block">Time of survey to end</p>
+                    </div>
+                </div>
+                <!-- Button -->
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button id="submit" name="submit" class="btn btn-default">Create</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
         <div class="col-md-6 column" name="container" id="container">
             <legend>Preview:</legend>
-                <script src="@routes.Assets.at("js/Chart.min.js")"></script>
-                <script src="@routes.Assets.at("js/date.js")"></script>
-                <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
-                <canvas id="myChart" width="400" height="400"></canvas>
-                <script>
+            <script src="@routes.Assets.at("js/Chart.min.js")"></script>
+            <script src = "@routes.Assets.at("js/date.js")"></script>
+            <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+            <canvas id="myChart" width="400" height="400"></canvas>
+            <div class="form-group">
+                <label class="control-label col-sm-2" for="buttonDelete">Delete column:</label>
+            <div id="buttonDelete" class="btn-group btn-toggle">
+
+                <button class="btn btn-xs btn-default">ON</button>
+                <button class="btn btn-xs btn-danger active" onclick="canvasCanDeleteLabel()" onchange="canvasCanDeleteLabel()">OFF</button>
+            </div>
+                </div>
+            <script>
+            $('.btn-toggle').click(function() {
+            $(this).find('.btn').toggleClass('active');
+
+
+            if ($(this).find('.btn-danger').size()>0) {
+            $(this).find('.btn').toggleClass('btn-danger');
+            }
+            });
+
+
                 var ctx = document.getElementById("myChart").getContext("2d");
 
                 var canvas = document.getElementById("myChart");
@@ -144,22 +167,65 @@
                     }
                     ]
                 };
-                var myNewChart = new Chart(ctx).Line(data,{
-    scaleOverride: true,
-    scaleSteps: 3,
-    scaleStepWidth: Math.ceil(3 / 3),
-    scaleStartValue: 0
-});
 
+                var myNewChart = new Chart(ctx).Line(data, {
+                    scaleOverride: true,
+                    scaleSteps: 3,
+                    scaleStepWidth: Math.ceil(3 / 3),
+                    scaleStartValue: 0
+                });
 
-                canvas.onclick = function (evt) {
+                myNewChart.onclick = function (evt) {
                     var activePoints = myNewChart.getPointsAtEvent(evt);
                     var rect = canvas.getBoundingClientRect();
 
                     var x = evt.clientX - rect.left;
                     var y = evt.clientY - rect.top;
 
+                    console.log(x);
+                    console.log(y);
+                }
+                canvas.onclick = function (evt) {
+                    var activePoints = myNewChart.getPointsAtEvent(evt);
+                    var rect = canvas.getBoundingClientRect();
+
+                    var x = evt.clientX - rect.left;
+                    var y = evt.clientY - rect.top;
+                    console.log(myNewChart.scale);
+                    var value = Math.round(Number((rect.height / y) - 1));
+                    if (value > myNewChart.scale.max) {
+                        value = myNewChart.scale.max;
+                    }
+                    myNewChart.datasets[0].points[labelToInt(myNewChart.scale.xLabels, activePoints[0].label)].value = value;
+                    myNewChart.update();
                 };
+
+                function canvasCanDeleteLabel(){
+                      canvas.onclick = function (evt) {
+                      var activePoints = myNewChart.getPointsAtEvent(evt);
+                          var i = labelToInt(myNewChart.scale.xLabels, activePoints[0].label);
+                             data.labels.splice(i,1);
+                             data.datasets[0].data.splice(i,1);
+                          myNewChart.destroy();
+                          myNewChart = new Chart(ctx ).Line(data,{
+                    scaleSteps: 3,
+                    scaleStepWidth: Math.ceil(3 / 3),
+                    scaleStartValue: 0
+                });
+
+                      }
+                }
+                function readChart(){
+                $("#labels" ).attr("value",myNewChart.scale.xLabels)
+                }
+                function labelToInt(labels, label) {
+                    var i = 0;
+                    for (var elem in labels) {
+                        if (labels[elem] == label) return i;
+                        else i++;
+                    }
+                    return NaN;
+                }
                 function modifyDateFormat() {
                     switch ($('#labelType').val()) {
                         case 'year':
@@ -203,6 +269,15 @@
                         i++;
                     });
                     myNewChart = new Chart(ctx).Line(data);
+                }
+                function checkEndDay() {
+                    var date = new Date($("#endDay").val());
+                    var now = new Date();
+                    console.log(date - now);
+                    if ((date - now) <= 0) {
+                        $("#endDay").attr("value", "");
+                        alert("Wrong date of end survey");
+                    }
                 }
                 function modifyCanvas() {
                     var dateFrom = $("#dateFrom");
@@ -264,14 +339,17 @@
                     var width = document.getElementById("container").offsetWidth;
                     canvas.setAttribute("width", width);
                 }
-                function modifyCanvasNumber(){
-                    var max = $("#maxValue" ).val();
-                var myNewChart = new Chart(ctx).Line(data,{
-                scaleOverride: true,
-                scaleSteps: max,
-                scaleStepWidth: 1,
-                scaleStartValue: 0
-                });
+                function modifyCanvasNumber() {
+                    var max = $("#maxValue").val();
+                    myNewChart.destroy();
+
+                    var myNewChart = new Chart(ctx).Line(data, {
+                        scaleOverride: true,
+                        scaleSteps: max,
+                        scaleStepWidth: 1,
+                        scaleStartValue: 0
+                    });
+                    myNewChart.update();
                 }
 
             </script>

@@ -3,17 +3,19 @@ package controllers
 import models._
 import org.apache.commons.codec.DecoderException
 import org.h2.jdbc.JdbcSQLException
-import play.api._
-import play.api.db.slick._
-import play.api.db.slick.Config.driver.simple._
-import play.api.data._
-import play.api.data.Forms._
-import play.api.mvc._
 import play.api.Play.current
-
+import play.api._
+import play.api.data.Forms._
+import play.api.data._
+import play.api.db.slick.Config.driver.simple._
+import play.api.db.slick._
+import play.api.libs._
 import play.api.libs.json.Json
 import play.api.libs.json.Json._
-import play.api.libs._
+import play.api.mvc._
+import com.feth.play.module.mail.Mailer;
+import com.feth.play.module.mail.Mailer.Mail.Attachment;
+import com.feth.play.module.mail.Mailer.Mail.Body;
 
 
 object Application extends Controller with Secured {
@@ -95,8 +97,10 @@ object Application extends Controller with Secured {
       registerForm.bindFromRequest().fold(
         error => BadRequest(views.html.register(error)),
         u => {
+
           try {
             user.insert(UserData(0, u.email, Crypto.encryptAES(u.password)))
+            Mailer.getDefaultMailer().sendMail("Hello in Meeter " + u.email,"You are now register in Meeter!",u.email);
             val uri = rs.request.session.get("url")
             if (uri.isDefined) {
               rs.request.session.-("url")
@@ -168,6 +172,7 @@ object Application extends Controller with Secured {
         room => {
           try {
             val roomId = (roomT returning roomT.map(_.id)) += RoomT(0, room.roomName,room.message, us.userId, room.perm, room.labelType, room.dateFrom, room.dateTo, room.maxValue, room.Labels, room.endDay)
+            
             survey.insert(SurveyRoom(0, roomId, us.userId, "0"))
             Redirect(routes.Application.room(Crypto.encryptAES(roomId.toString)))
           } catch {

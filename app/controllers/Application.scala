@@ -30,6 +30,7 @@ object Application extends Controller with Secured {
 
   implicit val userFormat = Json.format[UserData]
   implicit val roomFormat = Json.format[CreateRoom]
+  implicit val datasetsFormat = Json.format[DataSets]
 
   def dashboard = withUser { us => implicit request =>
     val prem = new models.Permission().values.toList.map(_.toString)
@@ -49,8 +50,9 @@ object Application extends Controller with Secured {
       "dateFrom" -> sqlDate,
       "dateTo" -> sqlDate,
       "maxValue" -> number(0, 10),
+      "values" -> text,
       "labels" -> text,
-      "users" ->list(text),
+      "users" -> list(text),
       "endDay" -> sqlDate("yyyy-MM-dd'T'hh:mm")
     )(CreateRoom.apply)(CreateRoom.unapply) verifying("Invalid form", form => form match {
       case form => Logger.logger.debug(form.toString); !form.roomName.isEmpty || !form.perm.isEmpty || !form.labelType.isEmpty || form.dateTo.before(form.dateFrom) || form.Labels.split(',').length < 3
@@ -100,7 +102,7 @@ object Application extends Controller with Secured {
 
           try {
             user.insert(UserData(0, u.email, Crypto.encryptAES(u.password)))
-            Mailer.getDefaultMailer().sendMail("Hello in Meeter " + u.email,"You are now register in Meeter!",u.email);
+            Mailer.getDefaultMailer().sendMail("Hello in Meeter " + u.email, "You are now register in Meeter!", u.email);
             val uri = rs.request.session.get("url")
             if (uri.isDefined) {
               rs.request.session.-("url")
@@ -153,9 +155,6 @@ object Application extends Controller with Secured {
     //val names = rooms.name
     // Logger.logger.error("test " + names + " " + rooms.data)
     //user.insert(UserData(0,roomId,names,rooms.data))
-
-
-
     Redirect(routes.Application.dashboard)
   }
 
@@ -171,9 +170,10 @@ object Application extends Controller with Secured {
         error => Ok(views.html.createRoom(us, (new Permission).values.toList.map(f => f.toString), error.withGlobalError("Invalid form " + error.errors.toString))),
         room => {
           try {
-            val roomId = (roomT returning roomT.map(_.id)) += RoomT(0, room.roomName,room.message, us.userId, room.perm, room.labelType, room.dateFrom, room.dateTo, room.maxValue, room.Labels, room.endDay)
-            
-            survey.insert(SurveyRoom(0, roomId, us.userId, "0"))
+            val roomId = (roomT returning roomT.map(_.id)) += RoomT(0, room.roomName, room.message, us.userId, room.perm, room.labelType, room.dateFrom, room.dateTo, room.maxValue, room.Labels, room.endDay)
+            println(room.Labels)
+            println(room.values)
+            survey.insert(SurveyRoom(0, roomId, us.userId, room.values,"rgba(151,187,205,0.2)"))
             Redirect(routes.Application.room(Crypto.encryptAES(roomId.toString)))
           } catch {
             case e: JdbcSQLException => Logger.logger.error("error", e)
@@ -189,26 +189,25 @@ object Application extends Controller with Secured {
         val id = Crypto.decryptAES(token).toLong
         val r = roomT.filter(f => f.id === id).list()
         val s = survey.filter(f => f.roomId === id) join user on (_.userId === _.id)
-        val userData = s.list.map {
-          elem =>
-            (elem._1.userId, elem._1.data, elem._2.name)
-        }
+        val us = s.map{f =>
+          (f._1.data,f._2.name)
+        }.list()
         val p = new Permission()
 
         r.headOption match {
-          case Some(RoomT(_, name,_, _, perm, _, _, _, _, _, endTime)) => p.withName(perm) match {
+          case Some(room) => p.withName(room.perm) match {
             case p.NONPUBLIC =>
               getUserIdFromRequest(request) match {
                 case Some(u) =>
                   if (s.filter(_._2.id === u.userId).list().size > 0)
-                    Ok(views.html.room(userData, perm,endTime))
+                    Ok(views.html.room(us, room))
                   else
                     Unauthorized(views.html.unauthorized())
                 case _ =>
                   Unauthorized(views.html.unauthorized())
               }
             case p.PUBLIC =>
-              Ok(views.html.room(userData, perm,endTime))
+              Ok(views.html.room(us, room))
             case p.WNONPUBLIC =>
               Ok("")
             case p.WPUBLIC =>
@@ -286,11 +285,12 @@ object Application extends Controller with Secured {
   //
   //  }
 
-  def jsonGet(id: Long) = withAuth { r =>
-    implicit rs =>
-
-      val byId = user.where(f => f.id === id).list()
-      Ok(toJson(byId))
+  def jsonGet(id: String) = DBAction { implicit rs =>
+    val i = Crypto.decryptAES(id).toLong
+    val r = roomT.filter(f => f.id === i).list().head
+    val s = survey.filter(f => f.roomId === i) join user on (_.userId === _.id)
+    val listSurvey = s.list.map(f=>DataSets(r.maxValue,r.Labels.split(','),f._2.name,f._1.strokeColor,f._1.strokeColor,f._1.strokeColor,f._1.strokeColor,"#FFF","#FFF",f._1.data.split(',').map(f=>f.toInt)))
+    Ok(toJson(listSurvey))
   }
 
   def jsonInsertUserData = DBAction(parse.json) { implicit rs =>

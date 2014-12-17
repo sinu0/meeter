@@ -102,6 +102,7 @@
                     </div>
                 </div>
                 <input id="labels" name="labels" type="hidden" value="">
+                <input id="values" name="values" type="hidden" value="">
 
                 <div class="form-group">
                     <label class="control-label col-sm-2" for="name">Survey end day</label>
@@ -131,19 +132,41 @@
             <div class="form-group">
                 <label class="control-label col-sm-2" for="buttonDelete">Delete column:</label>
             <div id="buttonDelete" class="btn-group btn-toggle">
-
-                <button class="btn btn-xs btn-default">ON</button>
-                <button class="btn btn-xs btn-danger active" onclick="canvasCanDeleteLabel()" onchange="canvasCanDeleteLabel()">OFF</button>
+                <button id="on" class="btn btn-xs btn-default" >ON</button>
+                <button id="off" class="btn btn-xs btn-danger active" >OFF</button>
             </div>
                 </div>
             <script>
             $('.btn-toggle').click(function() {
-            $(this).find('.btn').toggleClass('active');
+                $(this).find('.btn').toggleClass('active');
+                if(! $("#on" ).hasClass("active")){
+                canvas.onclick = function (evt) {
+                var activePoints = myNewChart.getPointsAtEvent(evt);
+                var rect = canvas.getBoundingClientRect();
 
+                var x = evt.clientX - rect.left;
+                var y = evt.clientY - rect.top;
+                console.log(myNewChart.scale);
+                var value = Math.round(Number((rect.height / y) - 1));
+                if (value > myNewChart.scale.max) {
+                value = myNewChart.scale.max;
+                }
+                myNewChart.datasets[0].points[labelToInt(myNewChart.scale.xLabels, activePoints[0].label)].value = value;
+                myNewChart.update();
+                };
+                } else{
+                canvas.onclick = function (evt) {
+                var activePoints = myNewChart.getPointsAtEvent(evt);
+                var i = labelToInt(myNewChart.scale.xLabels, activePoints[0].label);
+                myNewChart.scale.xLabels.splice(i,1);
+                myNewChart.datasets[0].points.splice(i,1);
+                myNewChart.update();
+                }
+                }
 
-            if ($(this).find('.btn-danger').size()>0) {
-            $(this).find('.btn').toggleClass('btn-danger');
-            }
+                if ($(this).find('.btn-danger').size()>0) {
+                    $(this).find('.btn').toggleClass('btn-danger');
+                }
             });
 
 
@@ -175,16 +198,7 @@
                     scaleStartValue: 0
                 });
 
-                myNewChart.onclick = function (evt) {
-                    var activePoints = myNewChart.getPointsAtEvent(evt);
-                    var rect = canvas.getBoundingClientRect();
 
-                    var x = evt.clientX - rect.left;
-                    var y = evt.clientY - rect.top;
-
-                    console.log(x);
-                    console.log(y);
-                }
                 canvas.onclick = function (evt) {
                     var activePoints = myNewChart.getPointsAtEvent(evt);
                     var rect = canvas.getBoundingClientRect();
@@ -204,19 +218,19 @@
                       canvas.onclick = function (evt) {
                       var activePoints = myNewChart.getPointsAtEvent(evt);
                           var i = labelToInt(myNewChart.scale.xLabels, activePoints[0].label);
-                             data.labels.splice(i,1);
-                             data.datasets[0].data.splice(i,1);
-                          myNewChart.destroy();
-                          myNewChart = new Chart(ctx ).Line(data,{
-                    scaleSteps: 3,
-                    scaleStepWidth: Math.ceil(3 / 3),
-                    scaleStartValue: 0
-                });
-
+                            myNewChart.scale.xLabels.splice(i,1);
+                            myNewChart.datasets[0].points.splice(i,1);
+                            myNewChart.update();
                       }
                 }
                 function readChart(){
-                $("#labels" ).attr("value",myNewChart.scale.xLabels)
+                $("#labels" ).attr("value",myNewChart.scale.xLabels);
+                var table = [];
+                var pointsTable = myNewChart.datasets[0].points;
+                for(var i in pointsTable){
+                    table[i] = pointsTable[i].value;
+                }
+                $("#values" ).attr("value",table);
                 }
                 function labelToInt(labels, label) {
                     var i = 0;

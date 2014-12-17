@@ -8,19 +8,21 @@ import scala.slick.model.ForeignKeyAction
 
 case class UserData(userId: Long, name: String, password: String)
 
-case class RoomT(roomId: Long, roomName: String, message: String, creatorId: Long, perm: String, labelType: String, dateFrom: Date, dateTo: Date, maxValue: Int, Labels: String,endDate: Date)
+case class RoomT(roomId: Long, roomName: String, message: String, creatorId: Long, perm: String, labelType: String, dateFrom: Date, dateTo: Date, maxValue: Int, Labels: String, endDate: Date)
 
-case class CreateRoom(roomName: String, message: String, perm: String, labelType: String, dateFrom: Date, dateTo: Date, maxValue: Int, Labels: String, usersEmails: List[String], endDay: Date)
+case class CreateRoom(roomName: String, message: String, perm: String, labelType: String, dateFrom: Date, dateTo: Date, maxValue: Int, values: String, Labels: String, usersEmails: List[String], endDay: Date)
 
 case class Login(login: String, password: String)
 
 case class Register(email: String, confirmEmail: String, password: String, confirmPassword: String)
 
-case class SurveyRoom(id: Long, roomId: Long, userId: Long, data: String)
+case class SurveyRoom(id: Long, roomId: Long, userId: Long, data: String, strokeColor: String)
 
 case class UserUpdate(name: String, roomId: Long, data: String)
 
 case class RoomData(survey: SurveyRoom, user: UserData)
+
+case class DataSets(max:Int, labels:Array[String],label: String, fillColor: String, StrokeColor: String, pointColor: String, pointStrokeColor: String, pointHighlightFill: String, pointHighlightStroke: String, data: Array[Int])
 
 case class Message(email: String, message: String)
 
@@ -52,7 +54,9 @@ class SurveyTable(tag: Tag) extends Table[SurveyRoom](tag, "SURVEY") {
 
   def data = column[String]("data", O.NotNull)
 
-  def * = (id, roomId, userId, data) <>(SurveyRoom.tupled, SurveyRoom.unapply _)
+  def strokeColor = column[String]("color", O.NotNull)
+
+  def * = (id, roomId, userId, data, strokeColor) <>(SurveyRoom.tupled, SurveyRoom.unapply _)
 
   def roomFk = foreignKey("roomFk", roomId, roomTable)(_.id, onDelete = ForeignKeyAction.Cascade)
 

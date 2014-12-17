@@ -1,5 +1,73 @@
-@(userDataList:List[(Long,String,String)],perm:String,endTime:java.util.Date)
+@(survey: List[(String,String)], room:RoomT)
 
-@main("Cat database","s") {
-<div>@endTime</div>
+@main("Cat database", "s") {
+    <div class="container">
+        <div class="row clearfix">
+           <div id="container" class="col-md-12 column">
+                 <legend>@room.roomName</legend>
+               <h5>@room.message</h5>
+                <script src="@routes.Assets.at("js/Chart.min.js")"></script>
+                <script src = "@routes.Assets.at("js/date.js")"></script>
+                <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+                <canvas id="myChart" width="400" height="400"></canvas>
+
+                <script>
+
+                var ctx = document.getElementById ( "myChart" ).getContext ( "2d" ) ;
+
+                var canvas = document.getElementById ( "myChart" ) ;
+                var ctx = canvas.getContext ( "2d" ) ;
+                var width = document.getElementById ( "container" ).offsetWidth ;
+                canvas.setAttribute("width", width);
+                var dataUpdate = {
+                labels: ["January", "February", "March", "April", "May", "June", "July"],
+                datasets: [{
+                label: "My Second dataset",
+                fillColor: "rgba(151,187,205,0.2)",
+                strokeColor: "rgba(151,187,205,1)",
+                pointColor: "rgba(151,187,205,1)",
+                pointStrokeColor: "#fff",
+                pointHighlightFill: "#fff",
+                pointHighlightStroke: "rgba(151,187,205,1)",
+                data: [1, 1, 1, 1, 1, 1, 1]
+                }
+                ]
+                };
+                var myNewChart = new Chart ( ctx ).Line(dataUpdate, {
+                scaleOverride : true,
+                scaleSteps : 3,
+                scaleStepWidth : Math.ceil ( 3 / 3 ),
+                scaleStartValue : 0
+                } ) ;
+                getData();
+                function getData(){
+                $.getJSON("/getData/"+window.location.pathname.split('/')[2],function(data){
+                    console.log()
+                    dataUpdate.labels = data[0].labels;
+                    for(var elem in data){
+                       $.each(data[elem], function (key, val){
+                           if(key!='labels')
+                           dataUpdate.datasets[elem][key] = val;
+                       });
+                    }
+                myNewChart.destroy();
+                myNewChart= new Chart ( ctx ).Line (dataUpdate, {
+                scaleOverride : true,
+                scaleSteps : data[0].max,
+                scaleStepWidth : 1,
+                scaleStartValue : 0,
+                animation : false
+                } ) ;
+                });
+                }
+
+                setInterval(getData,1000)
+
+
+
+
+                </script>
+            </div>
+        </div>
+    </div>
 }
